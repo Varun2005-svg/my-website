@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeZone - Your Ultimate Anime Experience</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --accent-color: #fd79a8;
+            --dark-color: #2d3436;
+            --light-color: #f9f9f9;
+            --text-light: #ffffff;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f0f2f5;
+            overflow-x: hidden;
+        }
+        
+        a {
+            text-decoration: none;
+        }
+        
+        ul {
+            list-style: none;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--dark-color);
+            color: var(--text-light);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+        
+        .nav-menu {
+            display: flex;
+        }
+        
+        .nav-menu li {
+            margin-left: 1.5rem;
+        }
+        
+        .nav-menu a {
+            color: var(--text-light);
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: 0.3s;
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            bottom: 0;
+            left: 0;
+            transition: 0.3s;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--accent-color);
+        }
+        
+        .active a::after {
+            width: 100%;
+        }
+        
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 600px;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://i.imgur.com/QxrSeKF.jpg');
+            background-size: cover;
+            background-position: center;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: var(--text-light);
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #5546e4;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+        
+        /* Featured Anime Section */
+        .featured-anime {
+            padding: 3rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--primary-color);
+        }
+        
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .anime-card {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .anime-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .anime-img {
+            position: relative;
+            height: 350px;
+            overflow: hidden;
+        }
+        
+        .anime-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .anime-card:hover .anime-img img {
+            transform: scale(1.1);
+        }
+        
+        .rating {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary-color);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .overlay {
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            transition: 0.3s;
+            opacity: 0;
+        }
+        
+        .anime-card:hover .overlay {
+            bottom: 0;
+            opacity: 1;
+        }
+        
+        .anime-info {
+            padding: 15px;
+        }
+        
+        .anime-info h3 {
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+        
+        .anime-info p {
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        /* Latest Releases */
+        .latest-releases {
+            padding: 3rem 0;
+            background: #f1f1f1;
+        }
+        
+        .anime-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 20px 0;
+            gap: 20px;
+        }
+        
+        .anime-slide {
+            min-width: 180px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            flex: 0 0 auto;
+        }
+        
+        .anime-slide img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .slide-info {
+            padding: 10px;
+        }
+        
+        .slide-info h3 {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .slide-info p {
+            font-size: 0.8rem;
+            color: #777;
+        }
+        
+        /* Content Tabs */
+        #content {
+            padding: 2rem 0;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark-color);
+            color: var(--text-light);
+            padding: 3rem 0 1rem;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--accent-color);
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            transition: 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-color);
+            margin-left: 5px;
+        }
+        
+        .social-media {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-media a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: #fff;
+            transition: 0.3s;
+        }
+        
+        .social-media a:hover {
+            background: var(--accent-color);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        /* Anime Details Page */
+        .anime-details {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .anime-details-header {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .anime-poster {
+            flex: 0 0 300px;
+        }
+        
+        .anime-poster img {
+            width: 100%;
+            height: auto;
+        }
+        
+        .anime-details-info {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .anime-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .anime-meta span {
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .watch-options {
+            margin: 20px 0;
+        }
+        
+        .episode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .episode {
+            background: #f5f5f5;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .episode:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                background: var(--dark-color);
+                flex-direction: column;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .nav-menu li {
+                margin: 15px 0;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .anime-details-header {
+                flex-direction: column;
+            }
+            
+            .anime-poster {
+                flex: 0 0 100%;
+            }
+        }
+        
+        /* Animation for page loading */
+        .page-transition {
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <h1 onclick="loadPage('home')"><span>Anime</span>Zone</h1>
+            </div>
+            
+            <div class="menu-toggle" onclick="toggleMenu()">
+                <i>☰</i>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="active"><a href="#" onclick="loadPage('home')">Home</a></li>
+                <li><a href="#" onclick="loadPage('anime')">Anime</a></li>
+                <li><a href="#" onclick="loadPage('trending')">Trending</a></li>
+                <li><a href="#" onclick="loadPage('genres')">Genres</a></li>
+                <li><a href="#" onclick="loadPage('about')">About</a></li>
+            </ul>
+        </div>
+    </header>
+    
+    <!-- Main Content Area -->
+    <div id="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Welcome to AnimeZone</h2>
+                <p>Discover, watch and share your favorite anime shows and movies</p>
+                <a href="#" class="btn" onclick="loadPage('anime')">Explore Anime</a>
+            </div>
+        </section>
+        
+        <!-- Featured Anime -->
+        <section class="featured-anime">
+            <div class="container">
+                <h2 class="section-title">Featured Anime</h2>
+                <div class="anime-grid">
+                    <!-- Anime Card 1 -->
+                    <div class="anime-card" onclick="loadPage('anime-details')">
+                        <div class="anime-img">
+                            <span class="rating">9.5</span>
+                            <img src="https://cdn.myanimelist.net/images/anime/1948/120625.jpg" alt="Attack on Titan">
+                            <div class="overlay">
+                                <a href="#" class="btn">Watch Now</a>
+                            </div>
+                        </div>
+                        <div class="anime-info">
+                            <h3>Attack on Titan</h3>
+                            <p>Action, Fantasy</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Anime Card 2 -->
+                    <div class="anime-card" onclick="loadPage('anime-details')">
+                        <div class="anime-img">
+                            <span class="rating">9.2</span>
+                            <img src="https://cdn.myanimelist.net/images/anime/1286/99889.jpg" alt="Demon Slayer">
+                            <div class="overlay">
+                                <a href="#" class="btn">Watch Now</a>
+                            </div>
+                        </div>
+                        <div class="anime-info">
+                            <h3>Demon Slayer</h3>
+                            <p>Action, Supernatural</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Anime Card 3 -->
+                    <div class="anime-card" onclick="loadPage('anime-details')">
+                        <div class="anime-img">
+                            <span class="rating">8.9</span>
+                            <img src="https://cdn.myanimelist.net/images/anime/1736/93138.jpg" alt="My Hero Academia">
+                            <div class="overlay">
+                                <a href="My Hero Academia.html">Watch Now</a>
+                            </div>
+                        </div>
+                        <div class="anime-info">
+                            <h3>My Hero Academia</h3>
+                            <p>Action, Superpower</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Anime Card 4 -->
+                    <div class="anime-card" onclick="loadPage('anime-details')">
+                        <div class="anime-img">
+                            <span class="rating">8.7</span>
+                            <img src="https://cdn.myanimelist.net/images/anime/1171/109222.jpg" alt="Jujutsu Kaisen">
+                            <div class="overlay">
+                                <a href="#" class="btn">Watch Now</a>
+                            </div>
+                        </div>
+                        <div class="anime-info">
+                            <h3>Jujutsu Kaisen</h3>
+                            <p>Action, Horror</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Latest Releases -->
+        <section class="latest-releases">
+            <div class="container">
+                <h2 class="section-title">Latest Releases</h2>
+                <div class="anime-slider">
+                    <!-- Anime Slide 1 -->
+                    <div class="anime-slide">
+                        <img src="https://cdn.myanimelist.net/images/anime/6/73245.jpg" alt="One Piece">
+                        <div class="slide-info">
+                            <h3>One Piece Ep 1080</h3>
+                            <p>Just now</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Anime Slide 2 -->
+                    <div class="anime-slide">
+                        <img src="https://cdn.myanimelist.net/images/anime/1806/126216.jpg" alt="Chainsaw Man">
+                        <div class="slide-info">
+                            <h3>Chainsaw Man Ep 12</h3>
+                            <p>2 hours ago</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Anime Slide 3 -->
+                    <div class="anime-slide">
+                        <img src="https://cdn.myanimelist.net/images/anime/1441/122795.jpg" alt="Spy x Family">
+                        <div class="slide-info">
+                            <h3>Spy x Family Ep 25</h3>
+                            <p>Yesterday</p>
+                            <a href="Spy x Family.html">Watch Now</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Anime Slide 4 -->
+                    <div class="anime-class">
+                        <img src="Solo Leveling.jpeg" alt="SoloLeveling">
+                        <div class="slide-info">
+                            <h3>SoloLeveling Ep 12</h3>
+                            <p>2 hours ago</p>
+                            <a href="Solo Leveling.html">Watch Now</a>
+                    
+                    <!-- Anime Slide 5 -->
+                    <div class="anime-slide">
+                        <img src="https://i.imgur.com/V8oEMOL.jpg" alt="Dragon Ball Super">
+                        <div class="slide-info">
+                            <h3>Dragon Ball Super</h3>
+                            <p>3 days ago</p>
+                            <a href="#" class="btn">Watch Now</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Anime Slide 6 -->
+                    <div class="anime-slide">
+                        <img src="Naruto.jpeg" alt="Naruto">
+                        <div class="slide-info">
+                            <h3>Naruto</h3>
+                            <p>4 days ago</p>
+                            <a href="Naruto.html">Watch Now</a>
+                        </div>
+                    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Dynamic Content Section -->
+        <section id="content">
+            <!-- Content will be loaded here dynamically -->
+        </section>
+    </div>
+    
+    <!-- Anime Details Page (Initially Hidden) -->
+    <div id="anime-details-page" style="display: none;">
+        <div class="container">
+            <div class="anime-details">
+                <div class="anime-details-header">
+                    <div class="anime-poster">
+                        <img src="https://i.imgur.com/bXTtHUb.jpg" alt="Attack on Titan">
+                    </div>
+                    <div class="anime-details-info">
+                        <h2>Attack on Titan</h2>
+                        <div class="anime-meta">
+                            <span>TV Series</span>
+                            <span>2013-2023</span>
+                            <span>Rating: 9.5</span>
+                            <span>Action</span>
+                            <span>Fantasy</span>
+                            <span>Drama</span>
+                        </div>
+                        <p>Centuries ago, mankind was slaughtered to near extinction by monstrous humanoid creatures called Titans, forcing humans to hide in fear behind enormous concentric walls. What makes these giants truly terrifying is that their taste for human flesh is not born out of hunger but what appears to be out of pleasure.</p>
+                        
+                        <div class="watch-options">
+                            <h3>Watch Episodes</h3>
+                            <p>Season 1</p>
+                            <div class="episode-grid">
+                                <div class="episode">Ep 1</div>
+                                <div class="episode">Ep 2</div>
+                                <div class="episode">Ep 3</div>
+                                <div class="episode">Ep 4</div>
+                                <div class="episode">Ep 5</div>
+                                <div class="episode">Ep 6</div>
+                                <div class="episode">Ep 7</div>
+                                <div class="episode">Ep 8</div>
+                                <div class="episode">Ep 9</div>
+                                <div class="episode">Ep 10</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-section">
+                    <h3>About AnimeZone</h3>
+                    <p>AnimeZone is a platform dedicated to anime lovers where you can watch, discover and discuss all your favorite anime titles.</p>
+                    <div class="social-media">
+                        <a href="#"><span>f</span></a>
+                        <a href="#"><span>t</span></a>
+                        <a href="#"><span>in</span></a>
+                        <a href="#"><span>ig</span></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="loadPage('home')">Home</a></li>
+                        <li><a href="#" onclick="loadPage('anime')">Anime List</a></li>
+                        <li><a href="#" onclick="loadPage('trending')">Trending</a></li>
+                        <li><a href="#" onclick="loadPage('genres')">Genres</a></li>
+                        <li><a href="#" onclick="loadPage('about')">About Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li>Email: contact@animezone.com</li>
+                        <li>Phone: +1 234 567 8900</li>
+                        <li>Address: Anime Street 123, Tokyo</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; <span id="current-year"></span> AnimeZone. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // DOM Elements
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        const yearSpan = document.getElementById('current-year');
+        const navLinks = document.querySelectorAll('.nav-menu li a');
+        const mainContent = document.getElementById('main-content');
+        const contentSection = document.getElementById('content');
+        const animeDetailsPage = document.getElementById('anime-details-page');
+        
+        // Set current year in footer
+        yearSpan.textContent = new Date().getFullYear();
+        
+        // Toggle mobile menu
+        function toggleMenu() {
+            navMenu.classList.toggle('active');
+        }
+        
+        // Close menu when clicking anywhere else
+        document.addEventListener('click', function(event) {
+            const isClickInside = navMenu.contains(event.target) || menuToggle.contains(event.target);
+            if (!isClickInside && navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+            }
+        });
+        
+        // Set active navigation link
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navLinks.forEach(item => {
+                    item.parentElement.classList.remove('active');
+                });
+                this.parentElement.classList.add('active');
+            });
+        });
+        
+        // Function to load pages dynamically
+        function loadPage(pageName) {
+            // Simulate page loading with AJAX request
+            
+            // Create transitions
+            mainContent.style.opacity = 0;
+            
+            // Reset displays
+            mainContent.style.display = 'block';
+            animeDetailsPage.style.display = 'none';
+            
+            // Simulate loading time
+            setTimeout(() => {
+                mainContent.style.opacity = 1;
+                
+                // Update content based on page
+                switch(pageName) {
+                    case 'home':
+                        // Just reload the current page structure
+                        window.scrollTo(0, 0);
+                        break;
+                        
+                    case 'anime-details':
+                        mainContent.style.display = 'none';
+                        animeDetailsPage.style.display = 'block';
+                        window.scrollTo(0, 0);
+                        break;
+                        
+                    case 'anime':
+                        contentSection.innerHTML = `
+                            <div class="container page-transition">
+                                <h2 class="section-title">Anime List</h2>
+                                <div class="anime-grid">
+                                    <!-- More anime cards -->
+                                    <div class="anime-card">
+                                        <div class="anime-img">
+                                            <span class="rating">9.1</span>
+                                            <img src="https://i.imgur.com/GRTO1KM.jpg" alt="Fullmetal Alchemist">
+                                            <div class="overlay">
+                                                <a href="#" class="btn">Watch Now</a>
+                                            </div>
+                                        </div>
+                                        <div class="anime-info">
+                                            <h3>Fullmetal Alchemist</h3>
+                                            <p>Action, Adventure</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="anime-card">
+                                        <div class="anime-img">
+                                            <span class="rating">8.8</span>
+                                            <img src="https://i.imgur.com/P3CpfRx.jpg" alt="Death Note">
+                                            <div class="overlay">
+                                                <a href="#" class="btn">Watch Now</a>
+                                            </div>
+                                        </div>
+                                        <div class="anime-info">
+                                            <h3>Death Note</h3>
+                                            <p>Mystery, Supernatural</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="anime-card">
+                                        <div class="anime-img">
+                                            <span class="rating">8.6</span>
+                                            <img src="https://i.imgur.com/QPv09RR.jpg" alt="Steins;Gate">
+                                            <div class="overlay">
+                                                <a href="#" class="btn">Watch Now</a>
+                                            </div>
+                                        </div>
+                                        <div class="anime-info">
+                                            <h3>Steins;Gate</h3>
+                                            <p>Sci-Fi, Thriller</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="anime-card">
+                                        <div class="anime-img">
+                                            <span class="rating">8.5</span>
+                                            <img src="https://i.imgur.com/rvPOwO0.jpg" alt="Hunter x Hunter">
+                                            <div class="overlay">
+                                                <a href="#" class="btn">Watch Now</a>
+                                            </div>
+                                        </div>
+                                        <div class="anime-info">
+                                            <h3>Hunter x Hunter</h3>
+                                            <p>Adventure, Fantasy</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="anime-card">
+                                        <div class="anime-img">
+                                            <span class="rating">8.9</span>
+                                            <img src="https://i.imgur.com/6lHSVGc.jpg" alt="Code Geass">
+                                            <div class="overlay">
+                                                <a href="#" class="btn">Watch Now</a>
+                                            </div>
+                                        </div>
+                                        <div class="anime-info">
+                                            <h3>Code Geass</h3>
+                                            <p>Action, Sci-Fi</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'trending':
+                        contentSection.innerHTML = `
+                            <div class="container page-transition">
+                                <h2 class="section-title">Trending Anime</h2>
+                                <div class="anime-grid">
+                                    <!-- More anime cards -->
+                                    <div class="anime-card">
+                                        <div class="anime-img">
+                                            <img src="https://i.imgur.com/bXTtHUb.jpg" alt="Attack on Titan">
+                                            <span class="rating">9.5</span>
+                                        </div>
+                                        <div class="anime-info">
+                                            <h3>Attack on Titan Final Season</h3>
+                                            <p>Action, Drama, Fantasy</p>
+                                            <a href="#watch" class="btn">Watch Now</a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="anime-card">
+                                        <div class="anime-img">
+                                            <img src="https://i.imgur.com/f3cE5kF.jpg" alt="Demon Slayer">
+                                            <span class="rating">9.2</span>
+                                        </div>
+                                        <div class="anime-info">
+                                            <h3>Demon Slayer</h3>
+                                            <p>Action, Supernatural</p>
+                                            <a href="#watch" class="btn">Watch Now</a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="anime-card">
+                                        <div class="anime-img">
+                                            <img src="https://i.imgur.com/iMBRSMX.jpg" alt="My Hero Academia">
+                                            <span class="rating">8.9</span>
+                                        </div>
+                                        <div class="anime-info">
+                                            <h3>My Hero Academia</h3>
+                                            <p>Action, Superpower</p>
+                                            <a href="#watch" class="btn">Watch Now</a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="anime-card">
+                                        <div class="anime-img">
+                                            <img src="https://i.imgur.com/7cG8Nvj.jpg" alt="Jujutsu Kaisen">
+                                            <span class="rating">9.0</span>
+                                        </div>
+                                        <div class="anime-info">
+                                            <h3>Jujutsu Kaisen</h3>
+                                            <p>Action, Supernatural</p>
+                                            <a href="#watch" class="btn">Watch Now</a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="anime-card">
+                                        <div class="anime-img">
+                                            <img src="https://i.imgur.com/Z9C8Kzh.jpg" alt="One Piece">
+                                            <span class="rating">9.3</span>
+                                        </div>
+                                        <div class="anime-info">
+                                            <h3>One Piece</h3>
+                                            <p>Action, Adventure</p>
+                                            <a href="#watch" class="btn">Watch Now</a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="anime-card">
+                                        <div class="anime-img">
+                                            <img src="https://i.imgur.com/SlfDIFj.jpg" alt="Chainsaw Man">
+                                            <span class="rating">8.8</span>
+                                        </div>
+                                        <div class="anime-info">
+                                            <h3>Chainsaw Man</h3>
+                                            <p>Action, Horror</p>
+                                            <a href="#watch" class="btn">Watch Now</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solo Leveling - All Episodes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #ff6b6b;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .main-player {
+            max-width: 1000px;
+            margin: 0 auto 30px auto;
+            background: #2c2c2c;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .video-container {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .main-video {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .episode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .episode-card {
+            background: #2c2c2c;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .play-btn {
+            background-color: #ff6b6b;
+            color: white;
+        }
+
+        .play-btn:hover {
+            background-color: #ff8585;
+        }
+
+        .download-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .download-btn:hover {
+            background-color: #45a049;
+        }
+
+        .episode-title {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Solo Leveling - All Episodes</h1>
+    </div>
+
+    <div class="main-player">
+        <div class="video-container">
+            <video id="mainVideo" class="main-video" controls>
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+
+    <div class="episode-grid" id="episodeGrid"></div>
+
+    <script>
+        const episodes = [
+            {
+                number: 1,
+                title: "I Am the Weakest Hunter",
+                url: "[SO] [01 - Solo Leveling] [1080p] [Dual].mp4.mkv"
+            },
+            {
+                number: 2,
+                title: "A Rank Hunter",
+                url: "[SO] [02 - Solo Leveling] [1080p] [Dual].mp4"
+            },
+            {
+                number: 3,
+                title: "The Secret to Strength",
+                url: "[SO] [03 - Solo Leveling] [1080p] [Dual].mp4"
+            },
+            {
+                number: 4,
+                title: "The New Gate",
+                url: "[SO] [04 - Solo Leveling] [1080p] [Dual].mp4"
+            },
+            {
+                number: 5,
+                title: "The Power Within",
+                url: "[SO] [05 - Solo Leveling] [1080p] [Dual].mp4"
+            },
+            {
+                number: 6,
+                title: "The Shadow Soldier",
+                url: "[SO] [06 - Solo Leveling] [1080p] [Dual].mp4"
+            },
+            {
+                number: 7,
+                title: "A New Beginning",
+                url: "[SO] [07 - Solo Leveling] [1080p] [Dual].mp4"
+            },
+            {
+                number: 8,
+                title: "Rising Up",
+                url: "[SO] [08 - Solo Leveling] [1080p] [Dual].mp4"
+            },
+            {
+                number: 9,
+                title: "The Dungeon Master",
+                url: "[SO] [09 - Solo Leveling] [1080p] [Dual].mp4"
+            },
+            {
+                number: 10,
+                title: "The True Power",
+                url: "[SO] [10 - Solo Leveling] [1080p] [Dual].mp4"
+            },
+            {
+                number: 11,
+                title: "Preparing for Battle",
+                url: "[SO] [11 - Solo Leveling] [1080p] [Dual].mp4"
+            },
+            {
+                number: 12,
+                title: "The Final Challenge",
+                url: "[SO] [12 - Solo Leveling] [1080p] [Dual].mp4"
+            }
+        ];
+
+        const mainVideo = document.getElementById('mainVideo');
+        const episodeGrid = document.getElementById('episodeGrid');
+
+        // Create episode cards
+        episodes.forEach(episode => {
+            const card = document.createElement('div');
+            card.className = 'episode-card';
+            card.innerHTML = `
+                <h3 class="episode-title">Episode ${episode.number}: ${episode.title}</h3>
+                <button class="btn play-btn" onclick="playEpisode(${episode.number})">
+                    Watch Episode ${episode.number}
+                </button>
+                <button class="btn download-btn" onclick="downloadEpisode(${episode.number})">
+                    Download Episode ${episode.number}
+                </button>
+            `;
+            episodeGrid.appendChild(card);
+        });
+
+        function playEpisode(episodeNumber) {
+            const episode = episodes.find(ep => ep.number === episodeNumber);
+            if (episode) {
+                mainVideo.src = episode.url;
+                mainVideo.play();
+                // Scroll to video player
+                document.querySelector('.main-player').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+            }
+        }
+
+        function downloadEpisode(episodeNumber) {
+            const episode = episodes.find(ep => ep.number === episodeNumber);
+            if (episode) {
+                const link = document.createElement('a');
+                link.href = episode.url;
+                link.download = `Solo Leveling Episode ${episodeNumber}.mp4`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        // Auto-play next episode when current episode ends
+        mainVideo.addEventListener('ended', function() {
+            const currentEpisodeNumber = episodes.find(ep => ep.url === mainVideo.src)?.number;
+            if (currentEpisodeNumber && currentEpisodeNumber < 12) {
+                playEpisode(currentEpisodeNumber + 1);
+            }
+        });
+    </script>
+</body>
+</html>
